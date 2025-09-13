@@ -1,1 +1,30 @@
-Library/
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+
+# Unity cache
+MemoryCaptures/
+AssetBundleGraph/
+CrashReports/
+
+# VS/IDE files
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# OS-generated
+.DS_Store
+Thumbs.db
