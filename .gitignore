@@ -28,3 +28,6 @@ CrashReports/
 # OS-generated
 .DS_Store
 Thumbs.db
+
+# Misc
+Drawings/
