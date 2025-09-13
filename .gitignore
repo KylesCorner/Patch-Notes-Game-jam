@@ -14,6 +14,7 @@ CrashReports/
 
 # VS/IDE files
 .vscode/
+.idea/
 *.csproj
 *.unityproj
 *.sln
