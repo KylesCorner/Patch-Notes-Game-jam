@@ -1,44 +1,72 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-[System.Serializable]
-public class GearBox
+public class GearBox : MonoBehaviour
 {
-    [HideInInspector]
-    public int currentGear = 0; // 0 = neutral
-    public bool clutch = false;   
-
-    public float finalDrive = 3.5f;       // overall final drive ratio
-    public float wheelRadius = 0.3f;      // meters
-    public float[] gearRatios = {3.6f, 2.1f, 1.5f, 1.0f, 0.8f, 0.6f};
-
-    public float wheelRPM = 0f; // rpm of wheels (from physics or input)
+    [HideInInspector] public int currentGear;
+    [HideInInspector] public float minRPM;
+    [HideInInspector] public float maxRPM;
+    [HideInInspector] public float idleRPM;
+    [HideInInspector] public float currentRPM;
+    [HideInInspector] public Vector3 currentSpeed;
+    [HideInInspector] public bool clutch;
+    [HideInInspector] public bool throttle;
+    private float speedPerRPM = 0.01f;
     
-    // Called by shift knob
-    public void SetGear(int gear)
+    public Gear[] gears;
+    
+    public bool IsOverRev()
     {
-        currentGear = gear;
+        return currentRPM > maxRPM;
     }
 
-    // Called by clutch input (0–1)
-    public void SetClutch(bool value)
+    public bool IsUnderRev()
     {
-        clutch = value;
+        return currentRPM < minRPM && currentGear != 0;
+    }
+    
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+        currentSpeed = new Vector3(0f, 0f, 0f);
+        currentRPM = 0f;
     }
 
-    // Engine RPM based on wheel RPM, clutch, and gear
-    public float GetEngineRPM()
-    {
-        if (currentGear == 0 || clutch) 
-            return 800f; // idle RPM when neutral or clutch disengaged
 
-        int gearIndex = Mathf.Clamp(currentGear - 1, 0, gearRatios.Length - 1);
-        return wheelRPM * gearRatios[gearIndex] * finalDrive;
-    }
-
-    // Speed in m/s
-    // TODO: Need to output as a 2d vector where y is the speed
-    public float GetSpeed()
+    // Update is called once per frame
+    void Update()
     {
-        return wheelRPM * 2f * Mathf.PI * wheelRadius / 60f; // wheel circumference
+        Gear gear = gears[currentGear];
+        if (throttle)
+        {
+            // Increase speed and RPM according to this gear's function
+            currentSpeed.y += gear.speedIncrease * Time.deltaTime;
+            currentRPM += gear.rpmIncrease * Time.deltaTime;
+
+            // Clamp to gear maxes
+            currentSpeed.y = Mathf.Min(currentSpeed.y, gear.maxSpeed);
+            currentRPM = Mathf.Min(currentRPM, maxRPM);
+
+
+        }
+        else
+        {
+            // decrease speed and RPM according to this gear's function
+            if (currentSpeed.y > 0)
+            {
+                currentSpeed.y -= gear.speedIncrease * Time.deltaTime;
+            }
+
+            if (currentRPM > 0)
+            {
+                
+                currentRPM -= gear.rpmIncrease * Time.deltaTime;
+            }
+
+            // Clamp to gear maxes
+            currentSpeed.y = Mathf.Min(currentSpeed.y, gear.maxSpeed);
+            currentRPM = Mathf.Min(currentRPM, maxRPM);
+        }
     }
 }

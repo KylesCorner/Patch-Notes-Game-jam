@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,8 +6,9 @@ public class CarController : MonoBehaviour
 {
     [Header("RPM Settings")]
     public RPMGauge rpmGauge;
-    public float rpmIncreaseSpeed = 4000f;
-    public float rpmDecreaseSpeed = 2000f;
+    public float minRPM = 200f;
+    public float maxRPM = 8000f;
+    public float idleRPM = 500f;
     
     [Header("Steering Settings")]
     public SteeringWheel steeringWheel;
@@ -19,10 +21,10 @@ public class CarController : MonoBehaviour
     private int currentGear = 0;
     
     [Header("Wheel / Gearbox")]
-    //public GearBox gearbox;
-    public float maxWheelRPM = 500f; // max wheel speed at full throttle
+    public GearBox gearbox;
     
     private float currentRPM = 0f;
+    private Vector3 currentSpeed;
     private bool clutchPressed = false;
     private bool accelerating = false;
 
@@ -53,6 +55,12 @@ public class CarController : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    private void Start()
+    {
+        //Gauge Setup
+        rpmGauge.maxRPM = maxRPM;
+    }
+
     private void Update()
     {
         //Steering Logic Handling
@@ -62,26 +70,35 @@ public class CarController : MonoBehaviour
         //Shift Knob Logic Handling
         currentGear = shiftKnob.currentGear;
         
+        //GearBox Logic
+        gearbox.clutch = clutchPressed;
+        gearbox.throttle = accelerating;
+        gearbox.currentGear = currentGear;
+
+        gearbox.minRPM = minRPM;
+        gearbox.maxRPM = maxRPM;
+        gearbox.idleRPM = idleRPM;
+        currentRPM = gearbox.currentRPM;
+        currentSpeed = gearbox.currentSpeed;
+        Debug.Log($"Current speed: {currentSpeed} | Current RPM: {currentRPM} | Current Gear: {currentGear}");
+        
         //RPM Logic Handling
+        rpmGauge.currentRPM = currentRPM;
+        float targetWheelRPM = 0f;
         if (accelerating)
         {
             if (clutchPressed)
             {
-                currentRPM += rpmIncreaseSpeed * Time.deltaTime;
             }
             else
             {
-                currentRPM += rpmIncreaseSpeed * Time.deltaTime * (float)0.25;
             }
             
         }
         else
         {
-            currentRPM -= rpmDecreaseSpeed * Time.deltaTime;
         }
 
-        currentRPM = Mathf.Clamp(currentRPM, 0f, rpmGauge.maxRPM);
-        rpmGauge.currentRPM = currentRPM;
         
     }
 }
