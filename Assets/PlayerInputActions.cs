@@ -120,13 +120,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""MouseDelta"",
+                    ""name"": ""Grab"",
                     ""type"": ""Value"",
                     ""id"": ""d2e612c7-4d2e-41c5-b552-95de171ca2d8"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PointerPosition"",
+                    ""type"": ""Button"",
+                    ""id"": ""49f61273-adec-4b41-8b36-085660e8f03e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -188,11 +197,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""28658c11-402c-47af-8d79-b7e4585d6d31"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseDelta"",
+                    ""action"": ""Grab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d54f129e-31a8-4cf4-b710-dd9313ddefe3"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointerPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -206,7 +226,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Steer = m_Player.FindAction("Steer", throwIfNotFound: true);
         m_Player_Throttle = m_Player.FindAction("Throttle", throwIfNotFound: true);
         m_Player_Clutch = m_Player.FindAction("Clutch", throwIfNotFound: true);
-        m_Player_MouseDelta = m_Player.FindAction("MouseDelta", throwIfNotFound: true);
+        m_Player_Grab = m_Player.FindAction("Grab", throwIfNotFound: true);
+        m_Player_PointerPosition = m_Player.FindAction("PointerPosition", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -290,7 +311,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Steer;
     private readonly InputAction m_Player_Throttle;
     private readonly InputAction m_Player_Clutch;
-    private readonly InputAction m_Player_MouseDelta;
+    private readonly InputAction m_Player_Grab;
+    private readonly InputAction m_Player_PointerPosition;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -315,9 +337,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Clutch => m_Wrapper.m_Player_Clutch;
         /// <summary>
-        /// Provides access to the underlying input action "Player/MouseDelta".
+        /// Provides access to the underlying input action "Player/Grab".
         /// </summary>
-        public InputAction @MouseDelta => m_Wrapper.m_Player_MouseDelta;
+        public InputAction @Grab => m_Wrapper.m_Player_Grab;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PointerPosition".
+        /// </summary>
+        public InputAction @PointerPosition => m_Wrapper.m_Player_PointerPosition;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -353,9 +379,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Clutch.started += instance.OnClutch;
             @Clutch.performed += instance.OnClutch;
             @Clutch.canceled += instance.OnClutch;
-            @MouseDelta.started += instance.OnMouseDelta;
-            @MouseDelta.performed += instance.OnMouseDelta;
-            @MouseDelta.canceled += instance.OnMouseDelta;
+            @Grab.started += instance.OnGrab;
+            @Grab.performed += instance.OnGrab;
+            @Grab.canceled += instance.OnGrab;
+            @PointerPosition.started += instance.OnPointerPosition;
+            @PointerPosition.performed += instance.OnPointerPosition;
+            @PointerPosition.canceled += instance.OnPointerPosition;
         }
 
         /// <summary>
@@ -376,9 +405,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Clutch.started -= instance.OnClutch;
             @Clutch.performed -= instance.OnClutch;
             @Clutch.canceled -= instance.OnClutch;
-            @MouseDelta.started -= instance.OnMouseDelta;
-            @MouseDelta.performed -= instance.OnMouseDelta;
-            @MouseDelta.canceled -= instance.OnMouseDelta;
+            @Grab.started -= instance.OnGrab;
+            @Grab.performed -= instance.OnGrab;
+            @Grab.canceled -= instance.OnGrab;
+            @PointerPosition.started -= instance.OnPointerPosition;
+            @PointerPosition.performed -= instance.OnPointerPosition;
+            @PointerPosition.canceled -= instance.OnPointerPosition;
         }
 
         /// <summary>
@@ -441,11 +473,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnClutch(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "MouseDelta" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Grab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMouseDelta(InputAction.CallbackContext context);
+        void OnGrab(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PointerPosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPointerPosition(InputAction.CallbackContext context);
     }
 }

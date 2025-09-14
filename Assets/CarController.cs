@@ -5,19 +5,23 @@ public class CarController : MonoBehaviour
 {
     [Header("RPM Settings")]
     public RPMGauge rpmGauge;
-    public int currentGear = 0;
-    private float rpmIncreaseSpeed = 4000f;
-    private float rpmDecreaseSpeed = 2000f;
+    public float rpmIncreaseSpeed = 4000f;
+    public float rpmDecreaseSpeed = 2000f;
     
     [Header("Steering Settings")]
     public SteeringWheel steeringWheel;
     public float turnSpeed = 250f;
     public float maxTurnAngle = 360f;
+
+    [Header("Shifter Settings")]
+    public ShiftKnob shiftKnob;
+    
+    private int currentGear = 0;
     
     private float currentRPM = 0f;
     private bool clutchPressed = false;
     private bool accelerating = false;
-    private int maxGear = 6;
+    
 
     private PlayerInputActions inputActions;
 
@@ -49,6 +53,9 @@ public class CarController : MonoBehaviour
         steeringWheel.turnSpeed = turnSpeed;
         steeringWheel.maxTurnAngle = maxTurnAngle;
         
+        //Shift Knob Logic Handling
+        currentGear = shiftKnob.currentGear;
+        
         //RPM Logic Handling
         if (accelerating)
         {
@@ -70,9 +77,5 @@ public class CarController : MonoBehaviour
         currentRPM = Mathf.Clamp(currentRPM, 0f, rpmGauge.maxRPM);
         rpmGauge.currentRPM = currentRPM;
         
-    }
-    public void SetGear(int gear)
-    {
-        currentGear = Mathf.Clamp(gear, 1, maxGear);
     }
 }

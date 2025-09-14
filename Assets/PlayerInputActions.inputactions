@@ -34,13 +34,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MouseDelta",
+                    "name": "Grab",
                     "type": "Value",
                     "id": "d2e612c7-4d2e-41c5-b552-95de171ca2d8",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "PointerPosition",
+                    "type": "Button",
+                    "id": "49f61273-adec-4b41-8b36-085660e8f03e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -102,11 +111,22 @@
                 {
                     "name": "",
                     "id": "28658c11-402c-47af-8d79-b7e4585d6d31",
-                    "path": "<Mouse>/delta",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MouseDelta",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d54f129e-31a8-4cf4-b710-dd9313ddefe3",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
