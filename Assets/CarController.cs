@@ -18,9 +18,15 @@ public class CarController : MonoBehaviour
     
     private int currentGear = 0;
     
+    [Header("Wheel / Gearbox")]
+    public GearBox gearbox;
+    public float maxWheelRPM = 500f; // max wheel speed at full throttle
+    
     private float currentRPM = 0f;
     private bool clutchPressed = false;
     private bool accelerating = false;
+
+    [HideInInspector] public Vector2 vehicleSpeed;
     
 
     private PlayerInputActions inputActions;
