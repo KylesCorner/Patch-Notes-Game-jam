@@ -19,7 +19,7 @@ public class RoadlinesController : MonoBehaviour
             );
 
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
-        if (viewportPos.y < -0.3f || viewportPos.y > 1.1f || viewportPos.x < -0.1f || viewportPos.x > 1.1f)
+        if (viewportPos.y < -0.3f || viewportPos.y > 1.1f || viewportPos.x < -0.1f || viewportPos.x > 1.1f || transform.position.y < -20)
         {
             Destroy(gameObject);
         }
