@@ -3,7 +3,9 @@ using UnityEngine.InputSystem;
 
 public class SteeringWheel : MonoBehaviour
 {
+    [HideInInspector]
     public float turnSpeed = 250f;
+    [HideInInspector]
     public float maxTurnAngle = 360f;
 
     private float currentAngle = 0f;
