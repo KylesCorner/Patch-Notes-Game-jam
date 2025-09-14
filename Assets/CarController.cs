@@ -68,6 +68,7 @@ public class CarController : MonoBehaviour
         steeringWheel.maxTurnAngle = maxTurnAngle;
         
         //Shift Knob Logic Handling
+        shiftKnob.clutch = clutchPressed;
         currentGear = shiftKnob.currentGear;
         
         //GearBox Logic

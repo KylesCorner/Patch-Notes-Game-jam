@@ -5,6 +5,8 @@ public class ShiftKnob : MonoBehaviour
 {
     [HideInInspector]
     public int currentGear = 0;
+
+    [HideInInspector] public bool clutch = false;
     
     private Camera mainCam;
     private bool isDragging = false;
@@ -32,15 +34,18 @@ public class ShiftKnob : MonoBehaviour
 
     private void OnClick()
     {
-        Vector2 mouseWorldPos = mainCam.ScreenToWorldPoint(
-            inputActions.Player.PointerPosition.ReadValue<Vector2>()
-        );
-
-        Collider2D hit = Physics2D.OverlapPoint(mouseWorldPos);
-        if (hit != null && hit.gameObject == gameObject) // grab only from main knob collider
+        if (clutch)
         {
-            isDragging = true;
-            dragOffset = (Vector2)transform.position - mouseWorldPos;
+            Vector2 mouseWorldPos = mainCam.ScreenToWorldPoint(
+                inputActions.Player.PointerPosition.ReadValue<Vector2>()
+            );
+
+            Collider2D hit = Physics2D.OverlapPoint(mouseWorldPos);
+            if (hit != null && hit.gameObject == gameObject) // grab only from main knob collider
+            {
+                isDragging = true;
+                dragOffset = (Vector2)transform.position - mouseWorldPos;
+            }
         }
     }
 

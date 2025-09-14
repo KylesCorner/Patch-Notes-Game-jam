@@ -11,7 +11,6 @@ public class GearBox : MonoBehaviour
     [HideInInspector] public Vector3 currentSpeed;
     [HideInInspector] public bool clutch;
     [HideInInspector] public bool throttle;
-    private float speedPerRPM = 0.01f;
     
     public Gear[] gears;
     
@@ -22,7 +21,7 @@ public class GearBox : MonoBehaviour
 
     public bool IsUnderRev()
     {
-        return currentRPM < minRPM && currentGear != 0;
+        return currentRPM < minRPM && (currentGear != 0);
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,6 +36,10 @@ public class GearBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (clutch)
+        {
+            currentGear = 0;
+        }
         Gear gear = gears[currentGear];
         if (throttle)
         {
@@ -48,20 +51,38 @@ public class GearBox : MonoBehaviour
             currentSpeed.y = Mathf.Min(currentSpeed.y, gear.maxSpeed);
             currentRPM = Mathf.Min(currentRPM, maxRPM);
 
+            if (IsOverRev())
+            {
+                
+            }
+
 
         }
         else
         {
             // decrease speed and RPM according to this gear's function
-            if (currentSpeed.y > 0)
+            if (currentGear > 0)
             {
-                currentSpeed.y -= gear.speedIncrease * Time.deltaTime;
-            }
+                if (currentSpeed.y > 0)
+                {
+                    currentSpeed.y -= gear.speedIncrease * Time.deltaTime;
+                }
 
-            if (currentRPM > 0)
+                if (!IsUnderRev())
+                {
+                    currentRPM -= gear.rpmIncrease * Time.deltaTime;
+                }
+            }
+            else
             {
-                
-                currentRPM -= gear.rpmIncrease * Time.deltaTime;
+                if (currentRPM <= idleRPM)
+                {
+                    currentRPM = idleRPM;
+                }
+                else
+                {
+                    currentRPM -= gear.rpmIncrease * Time.deltaTime;
+                }
             }
 
             // Clamp to gear maxes
