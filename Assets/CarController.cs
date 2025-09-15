@@ -5,10 +5,14 @@ using UnityEngine.InputSystem;
 public class CarController : MonoBehaviour
 {
     [Header("RPM Settings")]
-    public RPMGauge rpmGauge;
+    public Dial rpmGauge;
     public float minRPM = 200f;
     public float maxRPM = 8000f;
     public float idleRPM = 500f;
+    
+    [Header("Speed Settings")]
+    public Dial speedGauge;
+    public float maxSpeed = 200f;
     
     [Header("Steering Settings")]
     public SteeringWheel steeringWheel;
@@ -58,7 +62,8 @@ public class CarController : MonoBehaviour
     private void Start()
     {
         //Gauge Setup
-        rpmGauge.maxRPM = maxRPM;
+        rpmGauge.UpdateMax(maxRPM);
+        speedGauge.UpdateMax(maxSpeed);
     }
 
     private void Update()
@@ -66,6 +71,7 @@ public class CarController : MonoBehaviour
         //Steering Logic Handling
         steeringWheel.turnSpeed = turnSpeed;
         steeringWheel.maxTurnAngle = maxTurnAngle;
+        
         
         //Shift Knob Logic Handling
         shiftKnob.clutch = clutchPressed;
@@ -83,9 +89,10 @@ public class CarController : MonoBehaviour
         currentSpeed = gearbox.currentSpeed;
         Debug.Log($"Current speed: {currentSpeed} | Current RPM: {currentRPM} | Current Gear: {currentGear}");
         
-        //RPM Logic Handling
-        rpmGauge.currentRPM = currentRPM;
-        float targetWheelRPM = 0f;
+        //RPM/speed dial Logic Handling
+        rpmGauge.UpdateValue(currentRPM);
+        speedGauge.UpdateValue(currentSpeed.y);
+        
         if (accelerating)
         {
             if (clutchPressed)
