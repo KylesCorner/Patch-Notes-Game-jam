@@ -43,51 +43,30 @@ public class GearBox : MonoBehaviour
         Gear gear = gears[currentGear];
         if (throttle)
         {
-            // Increase speed and RPM according to this gear's function
             currentSpeed.y += gear.speedIncrease * Time.deltaTime;
-            currentRPM += gear.rpmIncrease * Time.deltaTime;
-
-            // Clamp to gear maxes
-            currentSpeed.y = Mathf.Min(currentSpeed.y, gear.maxSpeed);
-            currentRPM = Mathf.Min(currentRPM, maxRPM);
-
-            if (IsOverRev())
+            if (!IsOverRev())
             {
-                
+                currentRPM += gear.rpmIncrease * Time.deltaTime;
             }
-
-
         }
         else
         {
-            // decrease speed and RPM according to this gear's function
-            if (currentGear > 0)
+            currentSpeed.y -= gear.speedDecrease * Time.deltaTime;
+            if (!IsUnderRev())
             {
-                if (currentSpeed.y > 0)
+                currentRPM -= gear.rpmDecrease* Time.deltaTime;
+                if (currentGear == 0 && currentRPM < idleRPM)
                 {
-                    currentSpeed.y -= gear.speedIncrease * Time.deltaTime;
-                }
-
-                if (!IsUnderRev())
-                {
-                    currentRPM -= gear.rpmIncrease * Time.deltaTime;
+                   currentRPM = idleRPM; 
                 }
             }
-            else
-            {
-                if (currentRPM <= idleRPM)
-                {
-                    currentRPM = idleRPM;
-                }
-                else
-                {
-                    currentRPM -= gear.rpmIncrease * Time.deltaTime;
-                }
-            }
-
-            // Clamp to gear maxes
-            currentSpeed.y = Mathf.Min(currentSpeed.y, gear.maxSpeed);
-            currentRPM = Mathf.Min(currentRPM, maxRPM);
         }
+        // Clamp to gear maxes
+        if (currentSpeed.y < 0)
+        {
+            currentSpeed.y = 0;
+        }
+        currentSpeed.y = Mathf.Min(currentSpeed.y, gear.maxSpeed);
+        currentRPM = Mathf.Min(currentRPM, maxRPM);
     }
 }

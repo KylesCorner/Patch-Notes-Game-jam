@@ -93,20 +93,6 @@ public class CarController : MonoBehaviour
         rpmGauge.UpdateValue(currentRPM);
         speedGauge.UpdateValue(currentSpeed.y);
         
-        if (accelerating)
-        {
-            if (clutchPressed)
-            {
-            }
-            else
-            {
-            }
-            
-        }
-        else
-        {
-        }
-
         
     }
 }
