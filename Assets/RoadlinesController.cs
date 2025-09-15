@@ -14,12 +14,12 @@ public class RoadlinesController : MonoBehaviour
     {
         transform.position = new Vector3(
             _roadController.transform.position.x, 
-            transform.position.y - _car.vehicleVelocity.y / 2 * Time.deltaTime,
+            transform.position.y - _car.currentSpeed.y / 2 * Time.deltaTime,
             0
             );
 
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
-        if (viewportPos.y < -0.3f || viewportPos.y > 1.1f || viewportPos.x < -0.1f || viewportPos.x > 1.1f || transform.position.y < -20)
+        if (viewportPos.y < -0.3f || viewportPos.y > 1.1f || transform.position.y < -20)
         {
             Destroy(gameObject);
         }

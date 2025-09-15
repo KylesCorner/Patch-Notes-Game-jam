@@ -28,12 +28,9 @@ public class CarController : MonoBehaviour
     public GearBox gearbox;
     
     private float currentRPM = 0f;
-    private Vector3 currentSpeed;
+    public Vector3 currentSpeed;
     private bool clutchPressed = false;
     private bool accelerating = false;
-
-    [HideInInspector] public Vector2 vehicleVelocity = Vector2.zero;
-    
 
     private PlayerInputActions inputActions;
 
@@ -71,6 +68,7 @@ public class CarController : MonoBehaviour
         //Steering Logic Handling
         steeringWheel.turnSpeed = turnSpeed;
         steeringWheel.maxTurnAngle = maxTurnAngle;
+        currentSpeed.x = - steeringWheel.currentAngle / 360 * currentSpeed.magnitude;
         
         
         //Shift Knob Logic Handling
@@ -86,7 +84,7 @@ public class CarController : MonoBehaviour
         gearbox.maxRPM = maxRPM;
         gearbox.idleRPM = idleRPM;
         currentRPM = gearbox.currentRPM;
-        currentSpeed = gearbox.currentSpeed;
+        currentSpeed.y = gearbox.currentSpeed.y;
         Debug.Log($"Current speed: {currentSpeed} | Current RPM: {currentRPM} | Current Gear: {currentGear}");
         
         //RPM/speed dial Logic Handling

@@ -8,7 +8,7 @@ public class SteeringWheel : MonoBehaviour
     [HideInInspector]
     public float maxTurnAngle = 360f;
 
-    private float currentAngle = 0f;
+    public float currentAngle = 0f;
     private float steerInput = 0f;
 
     private PlayerInputActions inputActions;

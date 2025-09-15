@@ -13,7 +13,7 @@ public class RoadController : MonoBehaviour
     private float _carSpawnTimer = 0f;
     [SerializeField] public Sprite[] sprites;
     private float[] _lanes = { -16, -3, 12, -30 };
-    private VehicleController[] _vehicles;
+    private List<VehicleController> _vehicles;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,7 +29,7 @@ public class RoadController : MonoBehaviour
     {
         // lines
         _linesSpawnTimer += Time.deltaTime;
-        if (_linesSpawnTimer >= 2 / (car.vehicleVelocity.y / 10 + 1))
+        if (_linesSpawnTimer >= 2 / (car.currentSpeed.y / 10 + 1))
         {
             Vector3 spawnPosition = new Vector3(-10, -4, 0);
             Instantiate(roadlines, spawnPosition, Quaternion.identity).Init(this, car);
@@ -38,16 +38,14 @@ public class RoadController : MonoBehaviour
         
         // obsticles
         _carSpawnTimer += Time.deltaTime;
-        if (_carSpawnTimer >= 2)
+        if (_carSpawnTimer >= 5f)
         {
-            VehicleController vehicle = Instantiate(obsticleVehicle, 
-                new Vector3(_lanes[Random.Range(0, _lanes.Length)], -4), Quaternion.identity);
-            vehicle.Init(this, car, sprites[Random.Range(0, sprites.Length)]);
-            _vehicles.Append(vehicle);
-                
+            Instantiate(obsticleVehicle, new Vector3(_lanes[Random.Range(0, _lanes.Length)], -4), Quaternion.identity)
+                .Init(this, car);
             _carSpawnTimer = 0f;
         }
 
-        transform.Translate(new Vector3(car.vehicleVelocity.x * Time.deltaTime, 0, 0));
+        Debug.Log(car.currentSpeed);
+        transform.Translate(new Vector3(car.currentSpeed.x * Time.deltaTime, 0, 0));
     }
 }
